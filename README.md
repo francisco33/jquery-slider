@@ -1,1 +1,1 @@
-# jquery-slider
+## Lightweight jQuery Slider
