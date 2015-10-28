@@ -18,7 +18,7 @@ $(document).ready(function() {
     sliderWrapper.html(children);
 
     var sliderControls = slider.find('.slider-controls');
-    var arrowLeft = '<div class="arrow arrow-left disabled"></div>';
+    var arrowLeft = '<div class="arrow arrow-left"></div>';
     var arrowRight = '<div class="arrow arrow-right"></div>';
     sliderControls.html(arrowLeft + arrowRight);
 
@@ -51,6 +51,24 @@ $(document).ready(function() {
             activeSlide = new changeSlide(activeSlide).prevSlide;
         activeSlide.addClass('active');
     }
+    function goToStart() {
+        actualPosition = 0;
+        sliderWrapper.css({
+            'transition': 'all 1000ms',
+            'transform': "translate3d(" + parseInt(actualPosition) + "px, 0px, 0px)",
+        });
+        sliderWrapper.find('.active').removeClass('active');
+        activeSlide = children.first().addClass('active');
+    }
+    function goToEnd() {
+        actualPosition = -(slideNumber - 1) * outerWidth;
+        sliderWrapper.css({
+            'transition': 'all 1000ms',
+            'transform': "translate3d(" + parseInt(actualPosition) + "px, 0px, 0px)",
+        });
+        sliderWrapper.find('.active').removeClass('active');
+        activeSlide = children.last().addClass('active');
+    }
     function goToNextSlide() {
         // Set actual childrens
         children = sliderWrapper.children();
@@ -62,14 +80,12 @@ $(document).ready(function() {
             'transform': "translate3d(" + parseInt(actualPosition) + "px, 0px, 0px)",
         });
 
-        // Change active slide
-        setActiveSlide('next');
-
-        sliderArrow.left.removeClass('disabled');
-        if ( activeSlide.index() == children.length-1 ) {
-            sliderArrow.right.addClass('disabled');
+        if ( activeSlide.index() + 1 == children.length ) {
+            // Go To Start
+            goToStart();
         } else {
-            sliderArrow.right.removeClass('disabled');
+            // Change active slide
+            setActiveSlide('next');
         }
     }
     function goToPrevSlide() {
@@ -82,14 +98,11 @@ $(document).ready(function() {
             'transform': "translate3d(" + parseInt(actualPosition) + "px, 0px, 0px)",
         })
 
-        // Change active slide
-        setActiveSlide('prev');
-
-        sliderArrow.right.removeClass('disabled');
         if ( activeSlide.index() == 0 ) {
-            sliderArrow.left.addClass('disabled');
+            goToEnd();
         } else {
-            sliderArrow.left.removeClass('disabled');
+            // Change active slide
+            setActiveSlide('prev');
         }
     }
 
@@ -99,7 +112,7 @@ $(document).ready(function() {
 
     var slideNumber = children.length;
     var activeSlide = children.first().addClass('active');
-    
+
     children.addClass('slider-item').css('width', outerWidth);
     children = sliderWrapper.children();
 
@@ -126,6 +139,7 @@ $(document).ready(function() {
 
         outerWidth = window.outerWidth;
         actualPosition = ((-activeSlide.index()) * outerWidth);
+
         sliderWrapper.css({
             'width': children.length * outerWidth,
             'transform': "translate3d(" + actualPosition + "px, 0px, 0px)",
@@ -135,7 +149,6 @@ $(document).ready(function() {
             'width': outerWidth,
             'transition': 'all 0ms'
         });
-
         $('body').css('height', windowHeight());
     });
 })
