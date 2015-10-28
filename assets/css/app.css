@@ -560,12 +560,7 @@ hr {
     height: 100%;
     text-align: center;
     background-size: cover;
-    background-position: 50% 50%;
-    -webkit-transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    -ms-transition: all 0.5s;
-    -o-transition: all 0.5s;
-    transition: all 0.5s; }
+    background-position: 50% 50%; }
     #main-slider .slide-1 {
       background-image: url("../images/bg1.jpg"); }
     #main-slider .slide-2 {
