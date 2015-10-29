@@ -19,7 +19,7 @@ $(document).ready(function() {
 
     // var slider = new Slider();
     $('#main-slider').Slider({
-        pause: 1500,
+        speed: 1000,
     });
 
     // Functions onResize

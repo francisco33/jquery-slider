@@ -1,11 +1,11 @@
 $.fn.Slider = function(options) {
     var defaults = {
-        pause: 400,
+        speed: 400,
     };
     var settings = $.extend({}, defaults, options);
     var Slider = function(settings) {
         this.o = this;
-        this.pause = options.pause;
+        this.speed = options.speed;
         this.slider = $('#main-slider');
         this.children = this.slider.children();
         this.activeSlide = this.children.first().addClass('active');
@@ -88,7 +88,7 @@ $.fn.Slider = function(options) {
             // Core Function
             this.actualPosition = this.actualPosition - outerWidth;
             this.sliderWrapper.css({
-                'transition': 'all ' + this.pause + 'ms',
+                'transition': 'all ' + this.speed + 'ms',
                 'transform': "translate3d(" + parseInt(this.actualPosition) + "px, 0px, 0px)",
             });
 
@@ -106,7 +106,7 @@ $.fn.Slider = function(options) {
             this.children = this.sliderWrapper.children();
             this.actualPosition = this.actualPosition + outerWidth;
             this.sliderWrapper.css({
-                'transition': 'all ' + this.pause + 'ms',
+                'transition': 'all ' + this.speed + 'ms',
                 'transform': "translate3d(" + parseInt(this.actualPosition) + "px, 0px, 0px)",
             });
             if ( this.activeSlide.index() == 0 ) {
