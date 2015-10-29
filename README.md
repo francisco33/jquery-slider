@@ -1,5 +1,6 @@
-## Lightweight jQuery Slider
-###1: Link files
+# Lightweight jQuery Slider
+##Installation
+###1. Link files
 Link all required files before closing your <body>. 
 ```html
 <!-- jQuery library -->
@@ -8,17 +9,16 @@ Link all required files before closing your <body>.
 <script src="assets/js/slider.js"></script>
 ```
 
-###2: Create HTML element. 
+###2. Create HTML element. 
 Create HTML element, with your slides inside. 
 ```html
 <ul class="slider">
   <li><img src="/images/bg1.jpg" /></li>
   <li><img src="/images/bg2.jpg" /></li>
   <li><img src="/images/bg3.jpg" /></li>
-  <li><img src="/images/bg4.jpg" /></li>
 </ul>
 ```
-###3: Initialize slider.
+###3. Initialize slider.
 ```javascript
 $(document).ready(function() {
   $('.slider').Slider();
