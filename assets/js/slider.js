@@ -68,6 +68,7 @@ $.fn.Slider = function(options) {
             });
             // Resize
             $(window).resize(function() {
+                console.log('resize');
                 ob.resize();
             });
         };
@@ -138,8 +139,7 @@ $.fn.Slider = function(options) {
             this.activeSlide = this.children.last().addClass('active');
         };
         this.resize = function() {
-
-            outerWidth = window.outerWidth;
+            outerWidth = $(window).outerWidth();
             this.actualPosition = ((-this.activeSlide.index()) * outerWidth);
 
             this.sliderWrapper.css({
