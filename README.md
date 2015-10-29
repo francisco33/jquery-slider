@@ -1,4 +1,7 @@
 # Lightweight jQuery Slider
+## Demo 
+Check live version:
+http://plata.adamwaz.pl/apps/slider/
 ##Installation
 ###1. Link files
 Link all required files before closing your <body>. 
