@@ -498,6 +498,9 @@ hr {
 .slider-wrapper {
   height: 100%;
   text-align: left;
+  -webkit-backface-visibility: hidden;
+  /* Chrome, Safari, Opera */
+  backface-visibility: hidden;
   transform: translate3d(0, 0px, 0px);
   -webkit-transition: all 0.5s;
   -moz-transition: all 0.5s;
