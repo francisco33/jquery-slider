@@ -19,7 +19,8 @@ $(document).ready(function() {
 
     // var slider = new Slider();
     $('#main-slider').Slider({
-        speed: 1000,
+        speed: 800,
+        mode: 'vertical',
     });
 
     // Functions onResize

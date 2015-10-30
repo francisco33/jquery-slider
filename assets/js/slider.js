@@ -1,11 +1,13 @@
 $.fn.Slider = function(options) {
     var defaults = {
         speed: 400,
+        mode: 'horizontal'
     };
-    var settings = $.extend({}, defaults, options);
+    var config = $.extend( {}, defaults, options );
+
     var Slider = function(settings) {
         this.o = this;
-        this.speed = options.speed;
+        this.settings = config;
         this.slider = $('#main-slider');
         this.children = this.slider.children();
         this.activeSlide = this.children.first().addClass('active');
@@ -14,6 +16,7 @@ $.fn.Slider = function(options) {
         this.sliderWrapper;
         this.sliderArrow;
         this.actualPosition;
+        this.windowHeight = $(window).height();
 
         function changeSlide(elem) {
             this.nextSlide = elem.next();
@@ -48,10 +51,12 @@ $.fn.Slider = function(options) {
                 right : this.slider.find('.arrow.arrow-right'),
                 left : this.slider.find('.arrow.arrow-left')
             };
-            this.sliderWrapper.css({
-                'width': this.slideNumber * outerWidth,
-                'transform': "translate3d(0px, 0px, 0px)",
-            });
+            this.sliderWrapper.css("transform", 'translate3d(0px, 0px, 0px)');
+            if ( this.settings.mode == 'horizontal' ) {
+                this.sliderWrapper.css( 'width', this.slideNumber * outerWidth );
+            } else {
+                this.sliderWrapper.css( 'width', outerWidth );
+            }
             events(this);
         };
         var events = function(el) {
@@ -68,7 +73,6 @@ $.fn.Slider = function(options) {
             });
             // Resize
             $(window).resize(function() {
-                console.log('resize');
                 ob.resize();
             });
         };
@@ -81,18 +85,31 @@ $.fn.Slider = function(options) {
                 el.activeSlide = new changeSlide(el.activeSlide).prevSlide;
 
             el.activeSlide.addClass('active');
-        }
+        };
+        var transitionHorizontal = function(el) {
+            el.sliderWrapper.css({
+                'transition': 'all ' + el.settings.speed + 'ms',
+                'transform': "translate3d(" + parseInt(el.actualPosition) + "px, 0px, 0px)",
+            });
+        };
+        var transitionVertical = function(el) {
+            el.sliderWrapper.css({
+                'transition': 'all ' + el.settings.speed + 'ms',
+                'transform': "translate3d(0px," + parseInt(el.actualPosition) + "px, 0px)",
+            });
+        };
         this.goToNextSlide = function() {
             // Set actual childrens
             this.children = this.sliderWrapper.children();
 
             // Core Function
-            this.actualPosition = this.actualPosition - outerWidth;
-            this.sliderWrapper.css({
-                'transition': 'all ' + this.speed + 'ms',
-                'transform': "translate3d(" + parseInt(this.actualPosition) + "px, 0px, 0px)",
-            });
-
+            if ( this.settings.mode == 'horizontal') {
+                this.actualPosition = this.actualPosition - outerWidth;
+                transitionHorizontal(this);
+            } else if( this.settings.mode == 'vertical') {
+                this.actualPosition = this.actualPosition - this.windowHeight;
+                transitionVertical(this);
+            }
             if ( this.activeSlide.index() + 1 == this.slideNumber ) {
                 // Go To Start
                 this.goToStart();
@@ -105,11 +122,13 @@ $.fn.Slider = function(options) {
 
             // Set actual childrens
             this.children = this.sliderWrapper.children();
-            this.actualPosition = this.actualPosition + outerWidth;
-            this.sliderWrapper.css({
-                'transition': 'all ' + this.speed + 'ms',
-                'transform': "translate3d(" + parseInt(this.actualPosition) + "px, 0px, 0px)",
-            });
+            if ( this.settings.mode == 'horizontal' ) {
+                this.actualPosition = this.actualPosition + outerWidth;
+                transitionHorizontal(this);
+            } else {
+                this.actualPosition = this.actualPosition + this.windowHeight;
+                transitionVertical(this);
+            }
             if ( this.activeSlide.index() == 0 ) {
                 // Go To End
                 this.goToEnd();
@@ -130,23 +149,40 @@ $.fn.Slider = function(options) {
         }
         this.goToEnd = function() {
 
-            this.actualPosition = -(this.slideNumber - 1) * outerWidth;
-            this.sliderWrapper.css({
-                'transition': 'all 1000ms',
-                'transform': "translate3d(" + parseInt(this.actualPosition) + "px, 0px, 0px)",
-            });
+            this.sliderWrapper.css('transition', 'all 1000ms');
+
+            if ( this.settings.mode == "horizontal" ) {
+                this.actualPosition = -(this.slideNumber - 1) * outerWidth;
+                this.sliderWrapper.css(
+                    'transform', "translate3d(" + parseInt(this.actualPosition) + "px, 0px, 0px)"
+                );
+            } else if ( this.settings.mode == "vertical" ) {
+                this.actualPosition = -(this.slideNumber - 1) * this.windowHeight;
+                this.sliderWrapper.css(
+                    'transform', "translate3d(0px," + parseInt(this.actualPosition) + "px, 0px)"
+                );
+            }
+
             this.sliderWrapper.find('.active').removeClass('active');
             this.activeSlide = this.children.last().addClass('active');
         };
         this.resize = function() {
-            outerWidth = $(window).outerWidth();
-            this.actualPosition = ((-this.activeSlide.index()) * outerWidth);
-
-            this.sliderWrapper.css({
-                'width': this.slideNumber * outerWidth,
-                'transform': "translate3d(" + this.actualPosition + "px, 0px, 0px)",
-                'transition': 'all 0ms'
-            });
+            // outerWidth = $(window).outerWidth();
+            this.sliderWrapper.css('transform', 'all 0ms');
+            if ( this.settings.mode == 'horizontal') {
+                this.actualPosition = ((-this.activeSlide.index()) * outerWidth);
+                this.sliderWrapper.css({
+                    'width': this.slideNumber * outerWidth,
+                    'transform': "translate3d(" + this.actualPosition + "px, 0px, 0px)",
+                });
+            } else if ( this.settings.mode == 'vertical') {
+                this.windowHeight = $(window).height();
+                this.actualPosition = ((-this.activeSlide.index()) * this.windowHeight);
+                this.sliderWrapper.css({
+                    'transition': 'all 0ms',
+                    'transform': "translate3d(0px," + this.actualPosition + "px, 0px)",
+                });
+            }
             this.children.css({
                 'width': outerWidth,
                 'transition': 'all 0ms'
